@@ -1,0 +1,25 @@
+-----------PLANNING--------
+
+input :-
+TRAIN_A  ENGINE NDL NDL KRN GHY SLM NJP NGP BLR 
+TRAIN_B  ENGINE NJP GHY AGA PNE MAO BPL PTA 
+
+output:-
+ARRIVAL TRAIN_A ENGINE NDL NDL GHY NJP NGP
+ARRIVAL TRAIN_B ENGINE NJP GHY AGA BPL PTA
+DEPARTURE TRAIN_AB ENGINE GHY GHY NJP NJP PTA NDL NDL AGA BPL NGP
+
+
+Task 1:
+Input: TRAIN_A ENGINE NDL NDL KRN GHY SLM NJP NGP BLR 
+Output: ARRIVAL TRAIN_A ENGINE NDL NDL GHY NJP NGP
+
+- Parse the input
+  - ["ENGINE", "NDL", "NDL", "KRN", "GHY", "SLM", "NJP", "NGP", "BLR"]
+- Filter the bhogis which are not detached from TRAIN_A
+  - check each bhogi's distance and filter it if it is more than TRAIN_A's hyd distance or more tha 
+  - 
+
+
+  DEPARTURE output :-
+  DEPARTURE TRAIN_AB ENGINE ENGINE (descending order wise coaches)
