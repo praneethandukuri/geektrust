@@ -1,0 +1,15 @@
+{
+  "name": "geektrust-train-challenge",
+  "version": "1.0.0",
+  "description": "a coding challenge in geektrust coding platform",
+  "main": "geektrust.js",
+  "scripts": {
+    "start": "node geektrust.js",
+    "test": "mocha"
+  },
+  "author": "praneeth",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  }
+}
