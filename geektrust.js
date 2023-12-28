@@ -1,4 +1,3 @@
-// const trainBogies = []; // [{ stationCode: 'NDL', distance: 2700 },{ stationCode: 'NDL', distance: 2700 },{ stationCode: 'GHY', distance: 4700 },{ stationCode: 'NGP', distance: 2400 },{ stationCode: 'NJP', distance: 4200 }]
 const fs = require("fs")
 const { TRAINS } = require("./sample_input/trains.js")
 
@@ -16,16 +15,16 @@ const getBogieFromTrain = function (train, bogie) {
 }
 
 const getUndepartedBogies = function (bogie, train) {
-
   const hybBogie = getBogieFromTrain(train, "HYB")
   const currentBogie = getBogieFromTrain(train, bogie)
-  if (currentBogie !== undefined && currentBogie.distance - hybBogie.distance > 0) {
+
+  if (currentBogie !== undefined && currentBogie.distance - hybBogie.distance >= 0) {
     return { stationCode: currentBogie.stationCode, distance: currentBogie.distance - hybBogie.distance };
   }
 
 }
 
-const getBogiesOrder = function (bogies) {// ['NDL','NDL','KRN','GHY','SLM','NGP','BLR']
+const getBogiesOrder = function (bogies) {
   const remainingBogies = [];
 
   bogies.forEach(bogie => {
@@ -40,40 +39,40 @@ const getBogiesOrder = function (bogies) {// ['NDL','NDL','KRN','GHY','SLM','NGP
 }
 
 const getTrainABBogiesOrder = function (bogies) {
-  const trainABBogiesOrder = [];
-  const distances = []
-  for (let index = 0; index < bogies.length; index++) {
-    if (TRAIN_A[bogies[index]]) {
-      distances.push({ [bogies[index]]: TRAIN_A[bogies[index]] - TRAIN_A.HYB })
 
-    } else {
-      distances.push({ [bogies[index]]: TRAIN_B[bogies[index]] - TRAIN_B.HYB })
+  bogies.sort((currentBogie, beforeBogie) => beforeBogie.distance - currentBogie.distance);
 
-    }
-  }
-  trainABBogiesOrder.sort((currentBogie, beforeBogie) => currentBogie - beforeBogie);
-
-  return trainABBogiesOrder;
-}
-
-const getTrainABBogies = function (trains) {
-  const trainABBogies = (trains.join(" ").split(" "));
-  return getTrainABBogiesOrder(trainABBogies);
+  return bogies.map(bogie => bogie.stationCode)
 }
 
 const main = function (filename) {
   const trainInput = fs.readFileSync(filename, "utf8")
   const trains = getInitialTrains(trainInput); //[[train_A],[train_B]]
   const trainAB = [];
+  const result = [];
 
   trains.forEach(train => {
     const bogiesOrder = getBogiesOrder(train.slice(2))
     const bogies = bogiesOrder.map(bogie => bogie.stationCode)
-    console.log(`ARRIVAL ${train[0]} ENGINE ${bogies.join(" ")}`);
-    trainAB.push(bogiesOrder);
+
+    if (bogies.length > 0) {
+      result.push(`ARRIVAL ${train[0]} ENGINE ${bogies.join(" ")}`)
+    }
+
+    trainAB.push(...bogiesOrder);
   });
 
-  getTrainABBogies(trainAB);
+  if (result.length <= 0) {
+    console.log('JOURNEY_ENDED');
+    return
+  }
+
+  const trainABBogies = trainAB.filter(bogie => bogie.stationCode !== 'HYB')
+  if (trainABBogies.length > 0) {
+    const trainABBogiesOrder = getTrainABBogiesOrder(trainABBogies);
+    result.push(`DEPARTURE TRAIN_AB ENGINE ENGINE ${trainABBogiesOrder.join(' ')}`);
+  }
+  console.log(`${result.join('\n')}`);
 }
 
 main(process.argv[2]);
