@@ -32,6 +32,15 @@ const sortByDescending = function (bogies) {
   return bogies.map(bogie => bogie.stationCode);
 }
 
+const getStationDistances = function (trains) {
+  const stationDistances = [];
+  trains.forEach(train => {
+    const bogiesOrder = getBogiesOrder(train.slice(2));
+    stationDistances.push(...bogiesOrder);
+  });
+  return stationDistances;
+}
+
 const getMergedBogies = function (initialBogieOrder) {
   const trainAB = getStationDistances(initialBogieOrder);
   const trainABBogies = trainAB.filter(bogie => bogie.stationCode !== 'HYB');
@@ -40,15 +49,6 @@ const getMergedBogies = function (initialBogieOrder) {
   }
   const trainABBogiesOrder = sortByDescending(trainABBogies);
   return `DEPARTURE TRAIN_AB ENGINE ENGINE ${trainABBogiesOrder.join(' ')}`;
-}
-
-const getStationDistances = function (trains) {
-  const stationDistances = [];
-  trains.forEach(train => {
-    const bogiesOrder = getBogiesOrder(train.slice(2));
-    stationDistances.push(...bogiesOrder);
-  });
-  return stationDistances;
 }
 
 const getBogiesArrivingAtHyd = function (trains) {
@@ -68,7 +68,7 @@ const getMergedTrains = function (trainInput) {
   const initialBogieOrder = parseInitialTrains(trainInput);
   const remainingBogies = getBogiesArrivingAtHyd(initialBogieOrder);
   if (remainingBogies.length <= 0) {
-    return ['JOURNEY_ENDED']
+    return ['JOURNEY_ENDED'];
   }
 
   const mergedBogies = getMergedBogies(initialBogieOrder);
@@ -76,4 +76,4 @@ const getMergedTrains = function (trainInput) {
   return [...remainingBogies, mergedBogies];
 }
 
-module.exports = { getMergedTrains };
+module.exports = { parseInitialTrains, findBogieInTrain, getMergedTrains, TRAIN_A, TRAIN_B, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains };

@@ -104,11 +104,11 @@ describe('getMergedBogies', () => {
     const expectedOutput = `DEPARTURE TRAIN_AB ENGINE ENGINE ${['GHY', 'GHY', 'NJP', 'NJP', 'PTA', 'NDL', 'NDL', 'AGA', 'BPL', 'NGP',].join(' ')}`
     assert.deepStrictEqual(getMergedBogies(input), expectedOutput);
   })
-  it('it should return empty string when there is no bogies in input', () => {
+  it('it should return empty string when there are no bogies in the train', () => {
     const input = [];
     assert.deepStrictEqual(getMergedBogies(input), '');
   })
-  it('it should return empty string when there is no specified bogie  in train', () => {
+  it('it should return empty string when there is no specified bogie in train', () => {
     const input = [['AP']];
     assert.deepStrictEqual(getMergedBogies(input), '');
   })

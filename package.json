@@ -5,11 +5,13 @@
   "main": "geektrust.js",
   "scripts": {
     "start": "node geektrust.js",
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc mocha"
   },
   "author": "praneeth",
   "license": "ISC",
   "devDependencies": {
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
   }
 }
