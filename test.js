@@ -1,7 +1,11 @@
+const fs = require("fs")
 const assert = require("assert")
-const { parseInitialTrains, findBogieInTrain, TRAIN_A, TRAIN_B, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains } = require("./trainOperations");
-
 const { describe } = require("mocha");
+const { parseInitialTrains, findBogieInTrain, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains } = require("./trainOperations");
+
+const TRAINS = JSON.parse(fs.readFileSync("./trainDetails.json", "utf-8"));
+const [TRAIN_A, TRAIN_B] = TRAINS;
+
 
 describe('parseInitialTrain', () => {
   it('should parse and give the trains on each line', () => {

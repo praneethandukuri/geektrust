@@ -1,0 +1,94 @@
+[
+  [
+    {
+      "stationCode": "CHN",
+      "distance": 0
+    },
+    {
+      "stationCode": "SLM",
+      "distance": 350
+    },
+    {
+      "stationCode": "BLR",
+      "distance": 550
+    },
+    {
+      "stationCode": "KRN",
+      "distance": 900
+    },
+    {
+      "stationCode": "HYB",
+      "distance": 1200
+    },
+    {
+      "stationCode": "NGP",
+      "distance": 1600
+    },
+    {
+      "stationCode": "ITJ",
+      "distance": 1900
+    },
+    {
+      "stationCode": "BPL",
+      "distance": 2000
+    },
+    {
+      "stationCode": "AGA",
+      "distance": 2500
+    },
+    {
+      "stationCode": "NDL",
+      "distance": 2700
+    }
+  ],
+  [
+    {
+      "stationCode": "TVC",
+      "distance": 0
+    },
+    {
+      "stationCode": "SRR",
+      "distance": 300
+    },
+    {
+      "stationCode": "MAQ",
+      "distance": 600
+    },
+    {
+      "stationCode": "MAO",
+      "distance": 1000
+    },
+    {
+      "stationCode": "PNE",
+      "distance": 1400
+    },
+    {
+      "stationCode": "HYB",
+      "distance": 2000
+    },
+    {
+      "stationCode": "NGP",
+      "distance": 2400
+    },
+    {
+      "stationCode": "ITJ",
+      "distance": 2700
+    },
+    {
+      "stationCode": "BPL",
+      "distance": 2800
+    },
+    {
+      "stationCode": "PTA",
+      "distance": 3800
+    },
+    {
+      "stationCode": "NJP",
+      "distance": 4200
+    },
+    {
+      "stationCode": "GHY",
+      "distance": 4700
+    }
+  ]
+]

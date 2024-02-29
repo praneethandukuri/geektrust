@@ -1,6 +1,10 @@
-const { TRAINS } = require("./trainDetails.js");
+const fs = require("fs")
 
+const TRAINS = JSON.parse(fs.readFileSync("./trainDetails.json", "utf-8"));
 const [TRAIN_A, TRAIN_B] = TRAINS;
+
+const ZERO = 0;
+const TWO = 2;
 
 const parseInitialTrains = function (trainInput) {
   const trains = trainInput.split("\n");
@@ -15,7 +19,7 @@ const findBogieInTrain = function (train, bogie) {
 const getBogieDistanceFromHyd = function (bogie, train) {
   const hybBogie = findBogieInTrain(train, "HYB");
   const currentBogie = findBogieInTrain(train, bogie);
-  if (currentBogie.distance - hybBogie.distance >= 0) {
+  if (currentBogie.distance - hybBogie.distance >= ZERO) {
     return { stationCode: currentBogie.stationCode, distance: currentBogie.distance - hybBogie.distance };
   }
 }
@@ -35,7 +39,7 @@ const sortByDescending = function (bogies) {
 const getStationDistances = function (trains) {
   const stationDistances = [];
   trains.forEach(train => {
-    const bogiesOrder = getBogiesOrder(train.slice(2));
+    const bogiesOrder = getBogiesOrder(train.slice(TWO));
     stationDistances.push(...bogiesOrder);
   });
   return stationDistances;
@@ -44,7 +48,7 @@ const getStationDistances = function (trains) {
 const getMergedBogies = function (initialBogieOrder) {
   const trainAB = getStationDistances(initialBogieOrder);
   const trainABBogies = trainAB.filter(bogie => bogie.stationCode !== 'HYB');
-  if (trainABBogies.length <= 0) {
+  if (trainABBogies.length <= ZERO) {
     return "";
   }
   const trainABBogiesOrder = sortByDescending(trainABBogies);
@@ -54,11 +58,11 @@ const getMergedBogies = function (initialBogieOrder) {
 const getBogiesArrivingAtHyd = function (trains) {
   const trainsArrivingAtHyd = [];
   trains.forEach(train => {
-    const bogiesOrder = getBogiesOrder(train.slice(2));
+    const bogiesOrder = getBogiesOrder(train.slice(TWO));
     const bogies = bogiesOrder.map(bogie => bogie.stationCode);
 
-    if (bogies.length > 0) {
-      trainsArrivingAtHyd.push(`ARRIVAL ${train[0]} ENGINE ${bogies.join(" ")}`);
+    if (bogies.length > ZERO) {
+      trainsArrivingAtHyd.push(`ARRIVAL ${train[ZERO]} ENGINE ${bogies.join(" ")}`);
     }
   });
   return trainsArrivingAtHyd
@@ -67,7 +71,7 @@ const getBogiesArrivingAtHyd = function (trains) {
 const getMergedTrains = function (trainInput) {
   const initialBogieOrder = parseInitialTrains(trainInput);
   const remainingBogies = getBogiesArrivingAtHyd(initialBogieOrder);
-  if (remainingBogies.length <= 0) {
+  if (remainingBogies.length <= ZERO) {
     return ['JOURNEY_ENDED'];
   }
 
@@ -76,4 +80,4 @@ const getMergedTrains = function (trainInput) {
   return [...remainingBogies, mergedBogies];
 }
 
-module.exports = { parseInitialTrains, findBogieInTrain, getMergedTrains, TRAIN_A, TRAIN_B, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains };
+module.exports = { parseInitialTrains, findBogieInTrain, getMergedTrains, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains };
