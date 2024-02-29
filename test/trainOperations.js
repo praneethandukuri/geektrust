@@ -1,7 +1,7 @@
 const fs = require("fs")
 const assert = require("assert")
 const { describe } = require("mocha");
-const { parseInitialTrains, findBogieInTrain, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains } = require("./trainOperations");
+const { parseInitialTrains, findBogieInTrain, getBogieDistanceFromHyd, getBogiesOrder, sortByDescending, getStationDistances, getMergedBogies, getBogiesArrivingAtHyd, getMergedTrains } = require("../trainOperations");
 
 const TRAINS = JSON.parse(fs.readFileSync("./trainDetails.json", "utf-8"));
 const [TRAIN_A, TRAIN_B] = TRAINS;
@@ -28,23 +28,29 @@ describe('parseInitialTrain', () => {
 )
 
 describe('findBogieInTrain', () => {
+  const HYB_TO_NDL_DISTANCE = 2700;
+  const HYB_TO_GHY_DISTANCE = 4700;
+  
   it('should return a bogie in the train', () => {
-    assert.deepStrictEqual(findBogieInTrain(TRAIN_A, 'NDL'), { stationCode: 'NDL', distance: 2700 })
+    assert.deepStrictEqual(findBogieInTrain(TRAIN_A, 'NDL'), { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE })
   })
   it('should return a empty object when no specified bogie', () => {
     assert.deepStrictEqual(findBogieInTrain(TRAIN_A, 'AP'), {})
   })
   it('should return a empty object when no specified bogie', () => {
-    assert.deepStrictEqual(findBogieInTrain(TRAIN_B, 'GHY'), { stationCode: 'GHY', distance: 4700 })
+    assert.deepStrictEqual(findBogieInTrain(TRAIN_B, 'GHY'), { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE })
   })
 })
 
 describe('getBogieDistanceFromHyd', () => {
+  const HYB_TO_GHY_DISTANCE = 2700;
+  const HYB_TO_NDL_DISTANCE = 1500;
+
   it('should return a bogie in the train with distance from hyd', () => {
-    assert.deepStrictEqual(getBogieDistanceFromHyd('GHY', TRAIN_B), { stationCode: 'GHY', distance: 2700 });
+    assert.deepStrictEqual(getBogieDistanceFromHyd('GHY', TRAIN_B), { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE });
   })
   it('should return a bogie in the train with distance from hyd', () => {
-    assert.deepStrictEqual(getBogieDistanceFromHyd('NDL', TRAIN_A), { stationCode: 'NDL', distance: 1500 });
+    assert.deepStrictEqual(getBogieDistanceFromHyd('NDL', TRAIN_A), { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE });
   })
   it('should return undefined when specified bogie is not in train', () => {
     assert.deepStrictEqual(getBogieDistanceFromHyd('PNE', TRAIN_B), undefined);
@@ -55,14 +61,22 @@ describe('getBogieDistanceFromHyd', () => {
 })
 
 describe("getBogiesOrder", () => {
+  const HYB_TO_NDL_DISTANCE = 1500;
+  const HYB_TO_GHY_DISTANCE = 2700;
+  const HYB_TO_NJP_DISTANCE = 2200;
+  const HYB_TO_NGP_DISTANCE = 400;
+  const HYB_TO_AGA_DISTANCE = 1300;
+  const HYB_TO_BPL_DISTANCE = 800;
+  const HYB_TO_PTA_DISTANCE = 1800;
+
   it("should return bogies order", () => {
     const input = ["NDL", "NDL", "KRN", "GHY", "SLM", "NJP", "NGP", "BLR"];
-    const expectedOutput = [{ stationCode: 'NDL', distance: 1500 }, { stationCode: 'NDL', distance: 1500 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'NGP', distance: 400 }]
+    const expectedOutput = [{ stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'NGP', distance: HYB_TO_NGP_DISTANCE }]
     assert.deepStrictEqual(getBogiesOrder(input), expectedOutput)
   })
   it("should return bogie order", () => {
     const input = ["NJP", "GHY", "AGA", "PNE", "MAO", "BPL", "PTA"];
-    const expectedOutput = [{ stationCode: "NJP", distance: 2200 }, { stationCode: "GHY", distance: 2700 }, { stationCode: 'AGA', distance: 1300 }, { stationCode: "BPL", distance: 800 }, { stationCode: "PTA", distance: 1800 }];
+    const expectedOutput = [{ stationCode: "NJP", distance: HYB_TO_NJP_DISTANCE }, { stationCode: "GHY", distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'AGA', distance: HYB_TO_AGA_DISTANCE }, { stationCode: "BPL", distance: HYB_TO_BPL_DISTANCE }, { stationCode: "PTA", distance: HYB_TO_PTA_DISTANCE }];
     assert.deepStrictEqual(getBogiesOrder(input), expectedOutput);
   })
   it("should return undefined when the 'AP' is not there in train", () => {
@@ -74,8 +88,16 @@ describe("getBogiesOrder", () => {
 
 
 describe("sortByDescending", () => {
+  const HYB_TO_NDL_DISTANCE = 1500;
+  const HYB_TO_GHY_DISTANCE = 2700;
+  const HYB_TO_NJP_DISTANCE = 2200;
+  const HYB_TO_NGP_DISTANCE = 400;
+  const HYB_TO_AGA_DISTANCE = 1300;
+  const HYB_TO_BPL_DISTANCE = 800;
+  const HYB_TO_PTA_DISTANCE = 1800;
+
   it('should return the descending order bogies of TRAIN_AB after HYD', () => {
-    const input = [{ stationCode: 'NDL', distance: 1500 }, { stationCode: 'NDL', distance: 1500 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'NGP', distance: 400 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'AGA', distance: 1300 }, { stationCode: 'BPL', distance: 800 }, { stationCode: 'PTA', distance: 1800 }];
+    const input = [{ stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'NGP', distance: HYB_TO_NGP_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'AGA', distance: HYB_TO_AGA_DISTANCE }, { stationCode: 'BPL', distance: HYB_TO_BPL_DISTANCE }, { stationCode: 'PTA', distance: HYB_TO_PTA_DISTANCE }];
     const expectedOutput = ['GHY', 'GHY', 'NJP', 'NJP', 'PTA', 'NDL', 'NDL', 'AGA', 'BPL', 'NGP',];
     assert.deepStrictEqual(sortByDescending(input), expectedOutput);
   })
@@ -86,14 +108,22 @@ describe("sortByDescending", () => {
 })
 
 describe('getStationDistances', () => {
+  const HYB_TO_NDL_DISTANCE = 1500;
+  const HYB_TO_GHY_DISTANCE = 2700;
+  const HYB_TO_NJP_DISTANCE = 2200;
+  const HYB_TO_NGP_DISTANCE = 400;
+  const HYB_TO_AGA_DISTANCE = 1300;
+  const HYB_TO_BPL_DISTANCE = 800;
+  const HYB_TO_PTA_DISTANCE = 1800;
+
   it('should return station and distances after hyd of both trains', () => {
     const input = [['TRAIN_A', 'ENGINE', 'NDL', 'NDL', 'KRN', 'GHY', 'SLM', 'NJP', 'NGP', 'BLR'], ['TRAIN_B', 'ENGINE', 'NJP', 'GHY', 'AGA', 'PNE', 'MAO', 'BPL', 'PTA']];
-    const expectedOutput = [{ stationCode: 'NDL', distance: 1500 }, { stationCode: 'NDL', distance: 1500 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'NGP', distance: 400 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'AGA', distance: 1300 }, { stationCode: 'BPL', distance: 800 }, { stationCode: 'PTA', distance: 1800 }];
+    const expectedOutput = [{ stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'NGP', distance: HYB_TO_NGP_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'AGA', distance: HYB_TO_AGA_DISTANCE }, { stationCode: 'BPL', distance: HYB_TO_BPL_DISTANCE }, { stationCode: 'PTA', distance: HYB_TO_PTA_DISTANCE }];
     assert.deepStrictEqual(getStationDistances(input), expectedOutput);
   })
   it('should return station and distances after hyd of trainA', () => {
     const input = [['TRAIN_A', 'ENGINE', 'NDL', 'NDL', 'KRN', 'GHY', 'SLM', 'NJP', 'NGP', 'BLR']];
-    const expectedOutput = [{ stationCode: 'NDL', distance: 1500 }, { stationCode: 'NDL', distance: 1500 }, { stationCode: 'GHY', distance: 2700 }, { stationCode: 'NJP', distance: 2200 }, { stationCode: 'NGP', distance: 400 }];
+    const expectedOutput = [{ stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'NDL', distance: HYB_TO_NDL_DISTANCE }, { stationCode: 'GHY', distance: HYB_TO_GHY_DISTANCE }, { stationCode: 'NJP', distance: HYB_TO_NJP_DISTANCE }, { stationCode: 'NGP', distance: HYB_TO_NGP_DISTANCE }];
     assert.deepStrictEqual(getStationDistances(input), expectedOutput);
   })
   it('should return empty array if there is no input given', () => {
